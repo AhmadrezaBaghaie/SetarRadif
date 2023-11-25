@@ -47,6 +47,44 @@ body {
     font-size: 1.5rem;
   }
   
+  
+  @media (max-width: 767px){
+    .now-playing {
+      font-size: 0.75rem;
+    }
+    
+    .track-name {
+      font-size: 1.5rem;
+    }
+  
+    .track-folder {
+      font-size: 1rem;
+    }
+    
+    .track-artist {
+      font-size: 1rem;
+    }
+  }
+
+
+  @media (min-width: 767px){
+    .now-playing {
+      font-size: 1rem;
+    }
+    
+    .track-name {
+      font-size: 2rem;
+    }
+  
+    .track-folder {
+      font-size: 1.5rem;
+    }
+    
+    .track-artist {
+      font-size: 1.5rem;
+    }
+  }
+  
   .buttons {
     display: flex;
     flex-direction: row;

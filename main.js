@@ -1686,10 +1686,10 @@ let track_list = [
 
 function random_bg_color() {
 
-  // Get a number between 64 to 256 (for getting lighter colors)
-  let red = Math.floor(Math.random() * 256) + 64;
-  let green = Math.floor(Math.random() * 256) + 64;
-  let blue = Math.floor(Math.random() * 256) + 64;
+  // Get a number between 128 to 256 (for getting lighter colors)
+  let red = Math.floor(Math.random() * 256) + 128;
+  let green = Math.floor(Math.random() * 256) + 128;
+  let blue = Math.floor(Math.random() * 256) + 128;
 
   // Construct a color withe the given values
   let bgColor = "rgb(" + red + "," + green + "," + blue + ")";
@@ -1708,11 +1708,11 @@ function loadTrack(track_index) {
   track_name.textContent = track_list[track_index].name;
   track_folder.textContent = track_list[track_index].folder;
   track_artist.textContent = track_list[track_index].artist;
-  now_playing.textContent = "PLAYING " + (track_index + 1) + " OF " + track_list.length;
+  now_playing.textContent = "Playing " + (track_index + 1) + " of " + track_list.length;
 
   updateTimer = setInterval(seekUpdate, 1000);
   curr_track.addEventListener("ended", nextTrack);
-  random_bg_color();
+  //random_bg_color();
 }
 
 function resetValues() {
@@ -1720,6 +1720,55 @@ function resetValues() {
   total_duration.textContent = "00:00";
   seek_slider.value = 0;
 }
+
+
+function createScrollableList() {
+  const trackListContainer = document.getElementById('trackList');
+  const folders = {};
+
+  track_list.forEach((track, index) => {
+    if (!folders[track.folder]) {
+      folders[track.folder] = true;
+
+      const folderItem = document.createElement('div');
+      folderItem.textContent = track.folder;
+      folderItem.classList.add('listItem', 'folderName');
+      trackListContainer.appendChild(folderItem);
+    }
+
+    const trackItem = document.createElement('div');
+    const spaces = '\xa0'.repeat(track.folder.length); // '\xa0' is a non-breaking space
+    trackItem.textContent = `${spaces} ${track.name}`;
+    trackItem.classList.add('listItem', 'trackItem');
+    trackItem.addEventListener('click', function() {
+      track_index = index;
+      loadTrack(track_index);
+      playTrack();
+      highlightTrack(track_index);
+    });
+
+    trackListContainer.appendChild(trackItem);
+  });
+}
+
+
+function highlightTrack(index) {
+  const trackItems = document.querySelectorAll('.trackItem');
+  trackItems.forEach((item, idx) => {
+    if (idx === index) {
+      item.classList.add('activeTrack'); // Apply a class to highlight the active track
+    } else {
+      item.classList.remove('activeTrack'); // Remove the class from other tracks
+    }
+  });
+}
+
+
+
+// Call the function to generate the scrollable list
+createScrollableList();
+
+
 
 // Load the first track in the tracklist
 loadTrack(track_index);
@@ -1733,6 +1782,7 @@ function playTrack() {
   curr_track.play();
   isPlaying = true;
   playpause_btn.innerHTML = '<i class="fa fa-pause-circle fa-5x"></i>';
+  highlightTrack(track_index);
 }
 
 function pauseTrack() {
@@ -1747,6 +1797,7 @@ function nextTrack() {
   else track_index = 0;
   loadTrack(track_index);
   playTrack();
+  highlightTrack(track_index);
 }
 
 function prevTrack() {
@@ -1755,6 +1806,7 @@ function prevTrack() {
   else track_index = track_list.length;
   loadTrack(track_index);
   playTrack();
+  highlightTrack(track_index);
 }
 
 function seekTo() {
